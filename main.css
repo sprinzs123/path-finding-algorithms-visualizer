@@ -1,7 +1,66 @@
-.unvisited{
-    border: 1px solid black;
-}
-th{
+th, .node{
     width: 1em;
     height: 1em;
+    border: 1px solid lightblue;
+}
+
+.unvisited:hover{
+    cursor: pointer;
+}
+
+.node{
+    margin-right: 0.3em;
+}
+
+li{
+    list-style: none;
+}
+
+.grid{
+    display: flex;
+    justify-content: center;
+}
+
+.node-description{
+    display: flex;
+    align-items: center;
+}
+
+.all-nodes{
+    display: flex;
+    justify-content: space-between;
+
+}
+/* all nodes colors */
+#start-node{
+    background: green;
+}
+#end-node{
+    background: blue;
+}
+#wall-node{
+    background: black;
+}
+#visit-node-1{
+    background: teal;
+}
+#visit-node-2{
+    background: violet;
+}
+#path-node{
+    background: yellow;
+}
+
+.start-node{
+    background: green;
+}
+
+.end-node{
+    background: blue;
+}
+.wall-node{
+    background: black;
+}
+.visited-node{
+    background: teal;
 }

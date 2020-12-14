@@ -6,19 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maze Generator</title>
     <link rel="stylesheet" href="main.css">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
-
 <body>
+    <div class="container">
+        <div class="all-nodes">
+            <div class="one-node">
+                <ul class='node-description'>
+                    <li id='start-node' class='node'></li>
+                    <li>Start Node</li>
+                </ul>
+            </div>    
+            <div class="one-node">
+                <ul class='node-description'>
+                    <li id='end-node' class='node'></li>
+                    <li>Target Node</li>
+                </ul>
+            </div>  
+            <div class="one-node">
+                <ul class='node-description'>
+                    <li id='wall-node' class='node'></li>
+                    <li>Wall Node</li>
+                </ul>
+            </div>  
+            <div class="one-node">
+                <ul class='node-description'>
+                    <li id='visit-node-1' class='node'></li>
+                    <li id='visit-node-2' class='node'></li>
+
+                    <li>Visited Nodes</li>
+                </ul>
+            </div>  
+            <div class="one-node">
+                <ul class='node-description'>
+                    <li id='path-node' class='node'></li>
+                    <li>Shortest-pats Node</li>
+                </ul>
+            </div> 
+        </div>
+    </div>
+
     <div class="grid">
         <table id="board">
-
         </table>
     </div>
-    <!-- <table id="test">
-        <tr id="row 0"><th id="0-0" class="unvisited">1</th><th id="0-1" class="unvisited">1</th><th id="0-2" class="unvisited">1</th></tr> script.js:16:13
-        <tr id="row 1"><th id="1-0" class="unvisited">1</th><th id="1-1" class="unvisited">1</th><th id="1-2" class="unvisited">1</th></tr>
-    </table> -->
+
 
 
 </body>
