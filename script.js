@@ -1,5 +1,9 @@
+// nodes are stored in x y format with index starting at 0
+
+
 let width = 50
 let height = 20
+
 
 // creates grid using html tables
 function createGrid(){   
@@ -133,8 +137,11 @@ function allNodesFound(nodeId){
     let countLimit = 3
     let count = 0
     console.log(count)
-    while(count < countLimit) {               
+    while(count < countLimit) {         
+        count ++      
         newNode.forEach(node => {
+            count ++      
+
             console.log(node)
             if(node.classList == 'end-node'){
                 notFound == false
@@ -146,7 +153,6 @@ function allNodesFound(nodeId){
                 nodeElement.classList = 'visited-node'
                 visited.push(node)
                 allNodesFound(node)
-                count += 1
             }           
         });
     }
@@ -156,15 +162,13 @@ function allNodesFound(nodeId){
 
 // check if coordinates for future nodes are valid/are not out of bounds
 // in and out list of nodes
-function checkCoordinates(nodeList){
+function checkByCoordinates(nodeList){
     let approved = []
     nodeList.forEach(node =>{
         let coordinates = node.split('-')    
         let row = parseInt(coordinates[0])
         let column = parseInt(coordinates[1])
-        if(column >= 0 && column < width && row >=0 && row < height){
-            
-
+        if(column >= 0 && column < width && row >=0 && row < height){           
             approved.push(node)
         }
     })    
@@ -172,6 +176,19 @@ function checkCoordinates(nodeList){
 }
 
 
+// check if adjacent node is unvisited node
+function checkNodesType(nodeList){
+    let approved = []
+    nodeList.forEach(nodeID =>{
+        oneNode = document.getElementById(nodeID)
+        if(oneNode.classList == 'unvisited'){
+            approved.push(oneNode)
+        }
+    })
+}
+
+
+// input is id of a sting
 // get new/adjacent coordinates of a node
 // node coordinates input, list of new coordinates output as list
 function newNodes(nodeGrid){
@@ -183,8 +200,10 @@ function newNodes(nodeGrid){
     newCoordinates.push((row + '-' + (column +1)))
     newCoordinates.push(((row +1) + '-' + column))
     newCoordinates.push(((row -1)+ '-' + column))
-    return checkCoordinates(newCoordinates)
+    newCoordinates = checkByCoordinates(newCoordinates)
+    return checkNodesType(newCoordinates)
 }
 
 
 
+console.log(newNodes('9-10'))
