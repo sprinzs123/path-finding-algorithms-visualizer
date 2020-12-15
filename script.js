@@ -182,9 +182,11 @@ function checkNodesType(nodeList){
     nodeList.forEach(nodeID =>{
         oneNode = document.getElementById(nodeID)
         if(oneNode.classList == 'unvisited'){
-            approved.push(oneNode)
+            approved.push(nodeID)
+            oneNode.classList = 'visited-node'
         }
     })
+    return approved
 }
 
 
@@ -205,5 +207,23 @@ function newNodes(nodeGrid){
 }
 
 
+// recursive function to show new nodes on graphs
+// everything prototype o far and hard coded
+function showNewNodes(nodeId){
+    let nodeList = newNodes(nodeId)
+    nodeList.forEach(oneNode => {
+        setTimeout(300000)
+        let nodeClass = document.getElementById(oneNode).classList
+        console.log(nodeClass[0])
+        if( nodeClass[0] == 'visited-node'){
+            console.log('here')
+            showNewNodes(oneNode)            
+        }
+        if( nodeClass[0] == 'end-node'){
+            return false
+        }
+    })
+    console.log('fin')
+}
 
-console.log(newNodes('9-10'))
+// showNewNodes('9-10')
