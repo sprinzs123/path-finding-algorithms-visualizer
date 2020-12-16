@@ -128,37 +128,8 @@ function search(x, y){
 }
 
 
-// nodes spreading out from start
-// '10-10' input format
-function allNodesFound(nodeId){
-    let notFound = true 
-    newNode = newNodes(nodeId)
-    let visited = []
-    let countLimit = 3
-    let count = 0
-    console.log(count)
-    while(count < countLimit) {         
-        count ++      
-        newNode.forEach(node => {
-            count ++      
-
-            console.log(node)
-            if(node.classList == 'end-node'){
-                notFound == false
-                console.log('end this')
-                return notFound
-            }
-            if(node in visited == false){
-                nodeElement = document.getElementById(node)
-                nodeElement.classList = 'visited-node'
-                visited.push(node)
-                allNodesFound(node)
-            }           
-        });
-    }
-}
-// allNodesFound(startNode)
-
+let nodesList = []
+let foundEnd = false
 
 // check if coordinates for future nodes are valid/are not out of bounds
 // in and out list of nodes
@@ -176,6 +147,8 @@ function checkByCoordinates(nodeList){
 }
 
 
+
+
 // check if adjacent node is unvisited node
 function checkNodesType(nodeList){
     let approved = []
@@ -183,16 +156,41 @@ function checkNodesType(nodeList){
         oneNode = document.getElementById(nodeID)
         if(oneNode.classList == 'unvisited'){
             approved.push(nodeID)
-            oneNode.classList = 'visited-node'
+        }
+        if(oneNode.classList == 'end-node'){
+            approved.push(nodeID)
+            foundEnd = true            
         }
     })
     return approved
 }
 
 
+// main function to get all valid node
+function inertStartNode(){
+    let startNode = document.querySelector('.start-node').id
+    nodesList.push(startNode)
+    let count = 0
+    while(count < 10000000){
+        let firstNode = nodesList[0]
+        let nodeObject = document.getElementById(firstNode)        
+        nodeObject.classList = 'visited-node'
+        let validNeighbors = newNodes(firstNode)
+        validNeighbors.forEach( oneNode => {
+            nodesList.push(oneNode)        
+        })
+        nodesList.shift()
+        count ++
+    }
+}
+// inertStartNode()
+
+
+
+
 // input is id of a sting
 // get new/adjacent coordinates of a node
-// node coordinates input, list of new coordinates output as list
+// node coordinates input, list of new  valid coordinates output as list
 function newNodes(nodeGrid){
     let coordinates = nodeGrid.split('-')
     let newCoordinates = []
@@ -207,23 +205,34 @@ function newNodes(nodeGrid){
 }
 
 
+// trying with pushing and upshifting array
+function makeList(){
+    let validNeighbors = newNodes(nodesList[0])
+    validNeighbors.forEach( oneNode => {
+        nodesList.push(oneNode)
+    })
+    
+}
+
+// makeList()
+
+
 // recursive function to show new nodes on graphs
 // everything prototype o far and hard coded
 function showNewNodes(nodeId){
     let nodeList = newNodes(nodeId)
+    let found = false
     nodeList.forEach(oneNode => {
-        setTimeout(300000)
         let nodeClass = document.getElementById(oneNode).classList
-        console.log(nodeClass[0])
-        if( nodeClass[0] == 'visited-node'){
-            console.log('here')
+        if( nodeClass[0] == 'unvisited' && found == false){
+            let nodeObject = document.getElementById(oneNode)
+            nodeObject.classList = 'visited-node'
             showNewNodes(oneNode)            
         }
         if( nodeClass[0] == 'end-node'){
-            return false
+            found = true
         }
     })
-    console.log('fin')
 }
 
 // showNewNodes('9-10')
