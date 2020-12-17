@@ -91,7 +91,7 @@ isMouseReleased();
 
 // hard coded start and end points
 function makeNodes() {
-    let start = document.getElementById("9-20");
+    let start = document.getElementById("9-30");
     let end = document.getElementById("9-45");
     start.classList = "start-node";
     end.classList = "end-node";
@@ -120,12 +120,14 @@ function search(x, y) {
 let visitedNodes = new Set()
 let nodesList = [];
 let foundEnd = false;
-let endCoordinates = '9-45'
+let endCoordinates = [9, 45]
+// nodeLocation is stored as array with [X, Y] variables as int
 
-
+// add start node to array need not empty array for node exploration
 function inertStartNode() {
     let startNode = document.querySelector(".start-node").id;
-    nodesList.push(startNode);
+    let splittedNode = startNode.split("-")
+    nodesList.push([ parseInt(splittedNode[0]), parseInt(splittedNode[1]) ]);
 }
 
 
@@ -141,11 +143,8 @@ insertEndNode()
 // in and out list of nodes
 function checkByCoordinates(nodeList) {
     let approved = [];
-    nodeList.forEach((node) => {
-        let coordinates = node.split("-");
-        let row = parseInt(coordinates[0]);
-        let column = parseInt(coordinates[1]);
-        if (column >= 0 && column < width && row >= 0 && row < height) {
+    nodeList.forEach((nodeLocation) => {
+        if (nodeLocation[1] >= 0 && nodeLocation[1] < width && nodeLocation[1] >= 0 && nodeLocation[1] < height) {
             approved.push(node);
         }
     });
@@ -154,16 +153,16 @@ function checkByCoordinates(nodeList) {
 
 
 // check if adjacent node is unvisited node
+//  node can be unvisited if it is not in visited nodes set
 function checkNodesType(nodeList) {
     let approved = [];
-    nodeList.forEach((nodeID) => {
-        if (visitedNodes.has(nodeID) == false) {
-            approved.push(nodeID);
-        }
+    nodeList.forEach((nodeLocation) => {
         if (nodeID == endCoordinates) {
-            approved.push(nodeID);
             foundEnd = true;
         }
+        if( visitedNodes.has(nodeLocation) == false) {
+            approved.push(nodeLocation)
+        }   
     });
     return approved;
 }
@@ -187,13 +186,14 @@ function DrawNodes() {
     }
 }
 
-DrawNodes()
+// DrawNodes()
 
-// input is id of a sting
+// input is [x, y] location with int values
 // get new/adjacent coordinates of a node
 // node coordinates input, list of new  valid coordinates output as list
-function newNodes(nodeGrid) {
-    let coordinates = nodeGrid.split("-");
+// outputs nodes that exist on table
+// TO DO - maybe combine two functions together for checking valid nodes into this one for raster
+function newNodes(nodeLocation) {
     let newCoordinates = [];
     let row = parseInt(coordinates[0]);
     let column = parseInt(coordinates[1]);
