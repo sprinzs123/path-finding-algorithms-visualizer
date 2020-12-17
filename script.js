@@ -91,8 +91,8 @@ isMouseReleased();
 
 // hard coded start and end points
 function makeNodes() {
-    let start = document.getElementById("9-39");
-    let end = document.getElementById("9-10");
+    let start = document.getElementById("9-20");
+    let end = document.getElementById("9-45");
     start.classList = "start-node";
     end.classList = "end-node";
 }
@@ -101,6 +101,8 @@ makeNodes();
 let visited = [];
 let frontier = [];
 let solution = {};
+
+
 
 let startNode = document.querySelector(".start-node").id;
 let endNode = document.querySelector(".end-node").id;
@@ -114,8 +116,26 @@ function search(x, y) {
     while (frontier.length > 0) { }
 }
 
+
+let visitedNodes = new Set()
 let nodesList = [];
 let foundEnd = false;
+let endCoordinates = '9-45'
+
+
+function inertStartNode() {
+    let startNode = document.querySelector(".start-node").id;
+    nodesList.push(startNode);
+}
+
+
+function insertEndNode() {
+    let startNode = document.querySelector(".end-node").id;
+    visitedNodes.add(startNode)
+}
+inertStartNode();
+insertEndNode()
+
 
 // check if coordinates for future nodes are valid/are not out of bounds
 // in and out list of nodes
@@ -133,18 +153,14 @@ function checkByCoordinates(nodeList) {
 }
 
 
-
-
-
 // check if adjacent node is unvisited node
 function checkNodesType(nodeList) {
     let approved = [];
     nodeList.forEach((nodeID) => {
-        oneNode = document.getElementById(nodeID);
-        if (oneNode.classList == "unvisited") {
+        if (visitedNodes.has(nodeID) == false) {
             approved.push(nodeID);
         }
-        if (oneNode.classList == "end-node") {
+        if (nodeID == endCoordinates) {
             approved.push(nodeID);
             foundEnd = true;
         }
@@ -153,18 +169,10 @@ function checkNodesType(nodeList) {
 }
 
 
-function inertStartNode() {
-    let startNode = document.querySelector(".start-node").id;
-    nodesList.push(startNode);
-}
-inertStartNode();
-
-
 // main function to get all valid node
 function DrawNodes() {
     if (foundEnd == false) {
         setTimeout(() => {
-            console.log('loop')
             let firstNode = nodesList[0];
             let nodeObject = document.getElementById(firstNode);
             nodeObject.classList = "visited-node";
@@ -173,15 +181,13 @@ function DrawNodes() {
                 nodesList.push(oneNode);
             });
             nodesList.shift();
+            visitedNodes.add(firstNode)
             DrawNodes()
         }, 30);
-
     }
-
-
 }
 
-// DrawNodes()
+DrawNodes()
 
 // input is id of a sting
 // get new/adjacent coordinates of a node
