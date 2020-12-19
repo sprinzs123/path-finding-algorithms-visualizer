@@ -91,7 +91,7 @@ isMouseReleased();
 
 // hard coded start and end points
 function makeNodes() {
-    let start = document.getElementById("9-35");
+    let start = document.getElementById("9-1");
     let end = document.getElementById("9-45");
     start.classList = "start-node";
     end.classList = "end-node";
@@ -136,7 +136,7 @@ function insertEndNode() {
     visitedNodes.add(endNode)
 }
 inertStartNode();
-insertEndNode()
+// insertEndNode()
 
 
 // check if coordinates for future nodes are valid/are not out of bounds
@@ -147,6 +147,7 @@ function checkByCoordinates(nodeList) {
     nodeList.forEach((nodeLocation) => {
         if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
             let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
+
             if (visitedNodes.has(NodeId) == false) {
                 approved.push(nodeLocation);
             }
@@ -163,6 +164,7 @@ function checkNodesType(nodeList) {
     nodeList.forEach((nodeLocation) => {
         if (nodeLocation[0] == endCoordinates[0] && nodeLocation[1] == endCoordinates[1]) {
             foundEnd = true;
+            console.log('Found final')
         } else {
             approved.push(nodeLocation)
         }
@@ -175,24 +177,33 @@ function checkNodesType(nodeList) {
 // TO DO add if node class is correct
 function DrawNodes() {
     if (foundEnd == false) {
-        setTimeout(() => {
+        // setTimeout(() => {
             let firstNode = nodesList[0];
             let NodeId = firstNode[0] + '-' + firstNode[1]
-            let nodeObject = document.getElementById(NodeId);
-            visitedNodes.add(NodeId)
+            if(visitedNodes.has(NodeId) == false){
+                let firstNode = nodesList[0];
+                let NodeId = firstNode[0] + '-' + firstNode[1]
+                let nodeObject = document.getElementById(NodeId);
+                visitedNodes.add(NodeId)
+                // console.log(nodeObject)
+                nodeObject.classList = "visited-node";
+                let validNeighbors = newNodes(firstNode);
+                nodesList = nodesList.concat(validNeighbors)
+                nodesList.shift();
+                DrawNodes()
+            } else {
+                nodesList.shift()
+                DrawNodes()
+            }
 
-            nodeObject.classList = "visited-node";
-            let validNeighbors = newNodes(firstNode);
-            console.log(nodeObject)
-            nodesList = nodesList.concat(validNeighbors)
-            DrawNodes()
-            nodesList.shift();
 
-        }, 3);
+
+
+        // }, 30);
     }
 }
 
-// DrawNodes()
+DrawNodes()
 
 // input is [x, y] location with int values
 // get new/adjacent coordinates of a node
