@@ -41,7 +41,7 @@ function makeStartNodes(newNode) {
     allUnvisited.forEach((point) => {
         point.addEventListener("click", function () {
             if (checkTableNode(newNode)) {
-                console.log(checkTableNode(newNode));
+
             } else {
                 point.classList = newNode;
             }
@@ -91,7 +91,7 @@ isMouseReleased();
 
 // hard coded start and end points
 function makeNodes() {
-    let start = document.getElementById("9-30");
+    let start = document.getElementById("9-35");
     let end = document.getElementById("9-45");
     start.classList = "start-node";
     end.classList = "end-node";
@@ -117,23 +117,23 @@ function search(x, y) {
 }
 
 
-let visitedNodes = new Set()
+let visitedNodes = new Set
 let nodesList = [];
 let foundEnd = false;
 let endCoordinates = [9, 45]
-// nodeLocation is stored as array with [X, Y] variables as int
+// nodeLocation is stored as array with [Y, x] variables as int
 
 // add start node to array need not empty array for node exploration
 function inertStartNode() {
     let startNode = document.querySelector(".start-node").id;
     let splittedNode = startNode.split("-")
-    nodesList.push([ parseInt(splittedNode[0]), parseInt(splittedNode[1]) ]);
+    nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
 }
 
 
 function insertEndNode() {
-    let startNode = document.querySelector(".end-node").id;
-    visitedNodes.add(startNode)
+    let endNode = document.querySelector(".end-node").id;
+    visitedNodes.add(endNode)
 }
 inertStartNode();
 insertEndNode()
@@ -141,48 +141,54 @@ insertEndNode()
 
 // check if coordinates for future nodes are valid/are not out of bounds
 // in and out list of nodes
+// also check if nodes been visited 
 function checkByCoordinates(nodeList) {
     let approved = [];
     nodeList.forEach((nodeLocation) => {
-        if (nodeLocation[1] >= 0 && nodeLocation[1] < width && nodeLocation[1] >= 0 && nodeLocation[1] < height) {
-            approved.push(node);
+        if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
+            let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
+            if (visitedNodes.has(NodeId) == false) {
+                approved.push(nodeLocation);
+            }
         }
     });
     return approved;
 }
 
 
-// check if adjacent node is unvisited node
-//  node can be unvisited if it is not in visited nodes set
+// checking if node i final node
+// need for recursive function check
 function checkNodesType(nodeList) {
     let approved = [];
     nodeList.forEach((nodeLocation) => {
-        if (nodeID == endCoordinates) {
+        if (nodeLocation[0] == endCoordinates[0] && nodeLocation[1] == endCoordinates[1]) {
             foundEnd = true;
-        }
-        if( visitedNodes.has(nodeLocation) == false) {
+        } else {
             approved.push(nodeLocation)
-        }   
+        }
     });
     return approved;
 }
 
 
 // main function to get all valid node
+// TO DO add if node class is correct
 function DrawNodes() {
     if (foundEnd == false) {
         setTimeout(() => {
             let firstNode = nodesList[0];
-            let nodeObject = document.getElementById(firstNode);
+            let NodeId = firstNode[0] + '-' + firstNode[1]
+            let nodeObject = document.getElementById(NodeId);
+            visitedNodes.add(NodeId)
+
             nodeObject.classList = "visited-node";
             let validNeighbors = newNodes(firstNode);
-            validNeighbors.forEach((oneNode) => {
-                nodesList.push(oneNode);
-            });
-            nodesList.shift();
-            visitedNodes.add(firstNode)
+            console.log(nodeObject)
+            nodesList = nodesList.concat(validNeighbors)
             DrawNodes()
-        }, 30);
+            nodesList.shift();
+
+        }, 3);
     }
 }
 
@@ -195,17 +201,13 @@ function DrawNodes() {
 // TO DO - maybe combine two functions together for checking valid nodes into this one for raster
 function newNodes(nodeLocation) {
     let newCoordinates = [];
-    let row = parseInt(coordinates[0]);
-    let column = parseInt(coordinates[1]);
-    newCoordinates.push(row + "-" + (column - 1));
-    newCoordinates.push(row + "-" + (column + 1));
-    newCoordinates.push(row + 1 + "-" + column);
-    newCoordinates.push(row - 1 + "-" + column);
+    newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
+    newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
+    newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
+    newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
     newCoordinates = checkByCoordinates(newCoordinates);
     return checkNodesType(newCoordinates);
 }
-
-
 
 
 // working version of setTimeout
@@ -221,4 +223,12 @@ function test(count) {
 
 
 // test(1)
+
+
+// let testSet = new Set()
+// testSet.add( 'one' )
+// testSet.add( 'two' )
+// let x = 'one'
+
+
 
