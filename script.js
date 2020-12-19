@@ -75,7 +75,6 @@ function isMouseDown() {
         });
     });
 }
-isMouseDown();
 
 // check if mouse is up so no longer able to draw borders
 function isMouseReleased() {
@@ -89,9 +88,20 @@ function isMouseReleased() {
 isMouseDown();
 isMouseReleased();
 
+
+// add wall nodes to visited nodes
+function addWalls(){
+    let = allWallNodes = document.querySelectorAll('.wall-node');
+    allWallNodes.forEach((wallNode) => {
+        visitedNodes.add(wallNode.id)
+    });
+};
+
+
+
 // hard coded start and end points
 function makeNodes() {
-    let start = document.getElementById("9-1");
+    let start = document.getElementById("9-35");
     let end = document.getElementById("9-45");
     start.classList = "start-node";
     end.classList = "end-node";
@@ -147,10 +157,7 @@ function checkByCoordinates(nodeList) {
     nodeList.forEach((nodeLocation) => {
         if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
             let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
-
-            if (visitedNodes.has(NodeId) == false) {
                 approved.push(nodeLocation);
-            }
         }
     });
     return approved;
@@ -177,7 +184,7 @@ function checkNodesType(nodeList) {
 // TO DO add if node class is correct
 function DrawNodes() {
     if (foundEnd == false) {
-        // setTimeout(() => {
+        setTimeout(() => {
             let firstNode = nodesList[0];
             let NodeId = firstNode[0] + '-' + firstNode[1]
             if(visitedNodes.has(NodeId) == false){
@@ -185,7 +192,6 @@ function DrawNodes() {
                 let NodeId = firstNode[0] + '-' + firstNode[1]
                 let nodeObject = document.getElementById(NodeId);
                 visitedNodes.add(NodeId)
-                // console.log(nodeObject)
                 nodeObject.classList = "visited-node";
                 let validNeighbors = newNodes(firstNode);
                 nodesList = nodesList.concat(validNeighbors)
@@ -195,15 +201,20 @@ function DrawNodes() {
                 nodesList.shift()
                 DrawNodes()
             }
-
-
-
-
-        // }, 30);
+        }, 3);
     }
 }
 
-DrawNodes()
+
+// start algorith by submit btn
+function startAlgorithm(){
+    let startBtn = document.querySelector('.submit-btn')
+    startBtn.addEventListener('click', function(){
+        addWalls()
+        DrawNodes()
+    })
+}
+startAlgorithm()
 
 // input is [x, y] location with int values
 // get new/adjacent coordinates of a node
