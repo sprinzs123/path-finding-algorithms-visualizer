@@ -99,7 +99,7 @@ isMouseReleased();
 
 
 // add wall nodes to visited nodes
-function addWalls(){
+function addWalls() {
     let = allWallNodes = document.querySelectorAll('.wall-node');
     allWallNodes.forEach((wallNode) => {
         visitedNodes.add(wallNode.id)
@@ -147,7 +147,7 @@ function checkByCoordinates(nodeList) {
     nodeList.forEach((nodeLocation) => {
         if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
             let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
-                approved.push(nodeLocation);
+            approved.push(nodeLocation);
         }
     });
     return approved;
@@ -174,46 +174,47 @@ function checkNodesType(nodeList) {
 // iterate over created nodes later in function
 function GetVisitedNodes() {
     if (foundEnd == false && nodesList.length != 0) {
+        let firstNode = nodesList[0];
+        let NodeId = firstNode[0] + '-' + firstNode[1]
+        if (visitedNodes.has(NodeId) == false) {
             let firstNode = nodesList[0];
             let NodeId = firstNode[0] + '-' + firstNode[1]
-            if(visitedNodes.has(NodeId) == false){
-                let firstNode = nodesList[0];
-                let NodeId = firstNode[0] + '-' + firstNode[1]
-                visitedNodes.add(NodeId)
-                visitedNodesOrder.push(NodeId)
-                let validNeighbors = newNodes(firstNode);
-                nodesList = nodesList.concat(validNeighbors)
-                nodesList.shift();
-                GetVisitedNodes()
-            } else {
-                nodesList.shift()
-                GetVisitedNodes()
-            }
+            visitedNodes.add(NodeId)
+            visitedNodesOrder.push(NodeId)
+            let validNeighbors = newNodes(firstNode);
+            nodesList = nodesList.concat(validNeighbors)
+            nodesList.shift();
+            GetVisitedNodes()
+        } else {
+            nodesList.shift()
+            GetVisitedNodes()
+        }
     }
 }
 
 
 // iterate over visited nodes that are created
-function drawNode(){
-    // visitedNodes.forEach((nodeId) =>{
-    //     console.log(nodeId)
-    //     visitedNodesOrder.push(nodeId)
-    // })
+function drawNode() {
+
     visitedNodesOrder.shift()
-    for(i=0; i < visitedNodesOrder.length; i++) {
-        console.log(i)
-        let NodeId = visitedNodesOrder[i]
-        let nodeObject = document.getElementById(NodeId);
-        console.log(nodeObject)
-        nodeObject.classList = "visited-node";
+    for (i = 0; i < visitedNodesOrder.length; i++) {
+        drawRecursively(i)
     }
 }
 
+function drawRecursively(i) {
+    setTimeout(() => {
+        let NodeId = visitedNodesOrder[i]
+        let nodeObject = document.getElementById(NodeId);
+        nodeObject.classList = "visited-node";
+    }, 20 * i);
+
+}
 
 // start algorith by submit btn
-function startAlgorithm(){
+function startAlgorithm() {
     let startBtn = document.querySelector('.submit-btn')
-    startBtn.addEventListener('click', function(){
+    startBtn.addEventListener('click', function () {
         addWalls()
         GetVisitedNodes()
         drawNode()
