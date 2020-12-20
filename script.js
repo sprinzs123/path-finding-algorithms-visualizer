@@ -64,7 +64,16 @@ function wallGenerator() {
 }
 wallGenerator();
 
+
+
+// nodeLocation is stored as array with [Y, x] variables as int
+// global variables
 let canDrag = false;
+let visitedNodes = new Set
+let nodesList = [];
+let visitedNodesOrder = []
+let foundEnd = false;
+let endCoordinates = [9, 45]
 
 // check if mouse is down
 function isMouseDown() {
@@ -98,7 +107,6 @@ function addWalls(){
 };
 
 
-
 // hard coded start and end points
 function makeNodes() {
     let start = document.getElementById("9-35");
@@ -108,30 +116,12 @@ function makeNodes() {
 }
 makeNodes();
 
-let visited = [];
-let frontier = [];
-let solution = {};
-
-
 
 let startNode = document.querySelector(".start-node").id;
 let endNode = document.querySelector(".end-node").id;
-let testPoint = [];
-testPoint.push(startNode);
-
-// github https://github.com/tonypdavis/BFS-Maze-Solver/blob/master/BFS_v2.py
-function search(x, y) {
-    frontier.push((x, y));
-    solution.put(x, y);
-    while (frontier.length > 0) { }
-}
 
 
-let visitedNodes = new Set
-let nodesList = [];
-let foundEnd = false;
-let endCoordinates = [9, 45]
-// nodeLocation is stored as array with [Y, x] variables as int
+
 
 // add start node to array need not empty array for node exploration
 function inertStartNode() {
@@ -180,28 +170,42 @@ function checkNodesType(nodeList) {
 }
 
 
-// main function to get all valid node
-// TO DO add if node class is correct
-function DrawNodes() {
-    if (foundEnd == false) {
-        setTimeout(() => {
+// function to get all valid node into list
+// iterate over created nodes later in function
+function GetVisitedNodes() {
+    if (foundEnd == false && nodesList.length != 0) {
             let firstNode = nodesList[0];
             let NodeId = firstNode[0] + '-' + firstNode[1]
             if(visitedNodes.has(NodeId) == false){
                 let firstNode = nodesList[0];
                 let NodeId = firstNode[0] + '-' + firstNode[1]
-                let nodeObject = document.getElementById(NodeId);
                 visitedNodes.add(NodeId)
-                nodeObject.classList = "visited-node";
+                visitedNodesOrder.push(NodeId)
                 let validNeighbors = newNodes(firstNode);
                 nodesList = nodesList.concat(validNeighbors)
                 nodesList.shift();
-                DrawNodes()
+                GetVisitedNodes()
             } else {
                 nodesList.shift()
-                DrawNodes()
+                GetVisitedNodes()
             }
-        }, 3);
+    }
+}
+
+
+// iterate over visited nodes that are created
+function drawNode(){
+    // visitedNodes.forEach((nodeId) =>{
+    //     console.log(nodeId)
+    //     visitedNodesOrder.push(nodeId)
+    // })
+    visitedNodesOrder.shift()
+    for(i=0; i < visitedNodesOrder.length; i++) {
+        console.log(i)
+        let NodeId = visitedNodesOrder[i]
+        let nodeObject = document.getElementById(NodeId);
+        console.log(nodeObject)
+        nodeObject.classList = "visited-node";
     }
 }
 
@@ -211,7 +215,8 @@ function startAlgorithm(){
     let startBtn = document.querySelector('.submit-btn')
     startBtn.addEventListener('click', function(){
         addWalls()
-        DrawNodes()
+        GetVisitedNodes()
+        drawNode()
     })
 }
 startAlgorithm()
@@ -242,15 +247,6 @@ function test(count) {
         }, 3000);
     }
 }
-
-
-// test(1)
-
-
-// let testSet = new Set()
-// testSet.add( 'one' )
-// testSet.add( 'two' )
-// let x = 'one'
 
 
 
