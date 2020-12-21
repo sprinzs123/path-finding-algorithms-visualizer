@@ -233,16 +233,55 @@ function newNodes(nodeLocation) {
 }
 
 
-// working version of setTimeout
-function test(count) {
-    if (count < 5) {
-        console.log(count)
-        setTimeout(() => {
-            count++
-            test(count)
-        }, 3000);
+class Node {
+    constructor(nodeId){
+        this.nodeId = nodeId
+        this.nodeType = 'unvisited'
+        this.x = null
+        this.y = null
+        this.distance = Infinity
+    }
+
+    setX(){
+        let nodeId = this.nodeId
+        this.x = nodeId.split("-")[1]
+    }
+
+    setY(){
+        let nodeId = this.nodeId
+        this.y = nodeId.split("-")[0]
     }
 }
 
+let unvisitedNodesList = []
 
+
+// make list of all unvisited nodes
+// where going to check for valid nodes
+// get nodeId and pas into function that is going to make all objects
+function unvisitedNodes(){
+    let allUnvisitedNodes = document.querySelectorAll('.unvisited')
+    allUnvisitedNodes.forEach((nodeObject)=>{
+        let nodeId = nodeObject.id
+        let newNode = new Node(nodeId)
+        newNode.setY()
+        newNode.setX()   
+        unvisitedNodesList.push(newNode) 
+        // makeNodeObjects(nodeId)
+    });
+};
+unvisitedNodes()
+
+
+console.log(unvisitedNodesList)
+
+
+// make object from node id that got previously 
+function makeNodeObjects(nodeId){
+    let newNode = new Node(nodeId)
+    newNode.setX()    
+    // newNode.setY()
+    // console.log(newNode)
+
+}
 
