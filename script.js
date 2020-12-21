@@ -73,7 +73,7 @@ let visitedNodes = new Set
 let nodesList = [];
 let visitedNodesOrder = []
 let foundEnd = false;
-let endCoordinates = [9, 45]
+let endCoordinates = null
 
 // check if mouse is down
 function isMouseDown() {
@@ -117,11 +117,6 @@ function makeNodes() {
 makeNodes();
 
 
-let startNode = document.querySelector(".start-node").id;
-let endNode = document.querySelector(".end-node").id;
-
-
-
 
 // add start node to array need not empty array for node exploration
 function inertStartNode() {
@@ -129,15 +124,16 @@ function inertStartNode() {
     let splittedNode = startNode.split("-")
     nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
 }
-
-
-function insertEndNode() {
-    let endNode = document.querySelector(".end-node").id;
-    visitedNodes.add(endNode)
-}
 inertStartNode();
-// insertEndNode()
 
+
+// create final nodes as global variable for node checking
+function createEndCheck(){
+    let startNode = document.querySelector(".end-node").id;
+    let splittedNode = startNode.split("-")
+    endCoordinates = [splittedNode[0], parseInt(splittedNode[1])]
+}
+createEndCheck()
 
 // check if coordinates for future nodes are valid/are not out of bounds
 // in and out list of nodes
@@ -154,7 +150,7 @@ function checkByCoordinates(nodeList) {
 }
 
 
-// checking if node i final node
+// checking if node is final node
 // need for recursive function check
 function checkNodesType(nodeList) {
     let approved = [];
@@ -178,7 +174,6 @@ function GetVisitedNodes() {
         let NodeId = firstNode[0] + '-' + firstNode[1]
         if (visitedNodes.has(NodeId) == false) {
             let firstNode = nodesList[0];
-            let NodeId = firstNode[0] + '-' + firstNode[1]
             visitedNodes.add(NodeId)
             visitedNodesOrder.push(NodeId)
             let validNeighbors = newNodes(firstNode);
@@ -195,19 +190,19 @@ function GetVisitedNodes() {
 
 // iterate over visited nodes that are created
 function drawNode() {
-
     visitedNodesOrder.shift()
     for (i = 0; i < visitedNodesOrder.length; i++) {
         drawRecursively(i)
     }
 }
 
+// recursive function iterating over list of visited nodes and draw them
 function drawRecursively(i) {
     setTimeout(() => {
         let NodeId = visitedNodesOrder[i]
         let nodeObject = document.getElementById(NodeId);
         nodeObject.classList = "visited-node";
-    }, 20 * i);
+    }, 15 * i);
 
 }
 
