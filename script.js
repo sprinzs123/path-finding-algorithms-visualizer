@@ -128,7 +128,7 @@ inertStartNode();
 
 
 // create final nodes as global variable for node checking
-function createEndCheck(){
+function createEndCheck() {
     let startNode = document.querySelector(".end-node").id;
     let splittedNode = startNode.split("-")
     endCoordinates = [splittedNode[0], parseInt(splittedNode[1])]
@@ -234,7 +234,7 @@ function newNodes(nodeLocation) {
 
 
 class Node {
-    constructor(nodeId){
+    constructor(nodeId) {
         this.nodeId = nodeId
         this.nodeType = 'unvisited'
         this.x = null
@@ -242,12 +242,12 @@ class Node {
         this.distance = Infinity
     }
 
-    setX(){
+    setX() {
         let nodeId = this.nodeId
         this.x = nodeId.split("-")[1]
     }
 
-    setY(){
+    setY() {
         let nodeId = this.nodeId
         this.y = nodeId.split("-")[0]
     }
@@ -259,29 +259,39 @@ let unvisitedNodesList = []
 // make list of all unvisited nodes
 // where going to check for valid nodes
 // get nodeId and pas into function that is going to make all objects
-function unvisitedNodes(){
+function unvisitedNodes() {
     let allUnvisitedNodes = document.querySelectorAll('.unvisited')
-    allUnvisitedNodes.forEach((nodeObject)=>{
+    allUnvisitedNodes.forEach((nodeObject) => {
         let nodeId = nodeObject.id
         let newNode = new Node(nodeId)
         newNode.setY()
-        newNode.setX()   
-        unvisitedNodesList.push(newNode) 
-        // makeNodeObjects(nodeId)
+        newNode.setX()
+        unvisitedNodesList.push(newNode)
     });
 };
-unvisitedNodes()
+// unvisitedNodes()
 
 
-console.log(unvisitedNodesList)
+
+// nodes testing to filter out if nodes exist in list/can do true false if node haven't been recorded yet
+testNodes = [{ nodeId: "0-1", nodeType: "unvisited" }, { nodeId: "1-1", nodeType: "unvisited" }, { nodeId: "12-1", nodeType: "unvisited" }]
 
 
-// make object from node id that got previously 
-function makeNodeObjects(nodeId){
-    let newNode = new Node(nodeId)
-    newNode.setX()    
-    // newNode.setY()
-    // console.log(newNode)
-
+// check array of unvisited nodes
+//  return true if node been discovered already
+function nodeBeenDiscovered(nodeId) {
+    let allFound = testNodes.filter(function (node) {
+        if (node.nodeId == nodeId) {
+            return true
+        }
+    })
+    console.log(allFound)
+    if(allFound.length == 0){
+        return true 
+    } else {
+        return false
+    }
 }
 
+
+console.log(nodeBeenDiscovered('g'))
