@@ -69,9 +69,9 @@ wallGenerator();
 // nodeLocation is stored as array with [Y, x] variables as int
 // global variables
 let canDrag = false;
-let visitedNodes = new Set
-let nodesList = [];
-let visitedNodesOrder = []
+// let visitedNodes = new Set
+// let nodesList = [];
+// let visitedNodesOrder = []
 let foundEnd = false;
 let endCoordinates = null
 
@@ -233,6 +233,13 @@ startAlgorithm()
 // outputs nodes that exist on table
 
 
+
+let nodesList = []
+let availableNodes = []
+let visitedNodes = new Set
+let visitedNodesOrder = []
+
+
 class Node {
     constructor(nodeId) {
         this.nodeId = nodeId
@@ -253,16 +260,12 @@ class Node {
     };
 
     updateType(newType) {
-        self.type = newType
+        this.nodeType = newType
     };
     setDistance(num) {
         this.distance = num
     };
 }
-
-let NodesList = []
-let availableNodes = []
-
 
 // make list of all unvisited nodes
 // where going to check for valid nodes
@@ -290,13 +293,57 @@ function inertStartNode() {
     newNode.setX()
     newNode.setY()
     newNode.updateType('start-node')
-    numNode.setDistance(0)
+    newNode.setDistance(0)
+    availableNodes.push(newNode)
 }
 inertStartNode();
 
 
+// function to get all valid node into list
+// iterate over created nodes later in function
+function GetVisitedNodes() {
+    let firstNode = nodesList[0];
+    let nodeId = firstNode[0] + '-' + firstNode[1]
+    visitedNodes.add(nodeId)
+    let validNeighbors = newNodes(firstNode);
+    nodesList = nodesList.concat(validNeighbors)
+
+    let nodeObject = getObject(nodeId)
+    let nodePosition = availableNodes.indexOf(nodeObject)
+    visitedNodesOrder.push(availableNodes[nodePosition])
+};
+GetVisitedNodes()
 
 
+
+// function GetVisitedNodes() {
+//     if (foundEnd == false && nodesList.length != 0) {
+//         let firstNode = nodesList[0];
+//         let NodeId = firstNode[0] + '-' + firstNode[1]
+//         if (visitedNodes.has(NodeId) == false) {
+//             let firstNode = nodesList[0];
+//             visitedNodes.add(NodeId)
+
+
+//             visitedNodesOrder.push(NodeId)
+//             let validNeighbors = newNodes(firstNode);
+//             nodesList = nodesList.concat(validNeighbors)
+//             nodesList.shift();
+//             GetVisitedNodes()
+//         } else {
+//             nodesList.shift()
+//             GetVisitedNodes()
+//         }
+//     }
+// }
+
+
+
+
+
+// result of list of all valid nodes
+// check if nodes location are not out of bounds
+// input is [y, x] location with int values
 function newNodes(nodeLocation) {
     let newCoordinates = [];
     newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
@@ -308,13 +355,11 @@ function newNodes(nodeLocation) {
 };
 
 
-
-
 // check array of unvisited nodes
 //  return true if node been discovered already
 function nodeBeenDiscovered(nodeId) {
     let allFound = availableNodes.filter(function (node) {
-        if (node.nodeId == nodeId) {
+        if (node.type != 'unvisited') {
             return true
         }
     })
@@ -327,23 +372,53 @@ function nodeBeenDiscovered(nodeId) {
 }
 
 
-
-
-
-// remove item from unvisited array 
-// the item that removing is current node
-function removeFromUnvisited(nodeId) {
-    let changedUnvisited = availableNodes.filter(function (node) {
-        return node.nodeId != nodeId
+// set distance of of node by looking min distance of a it neighbors
+// list of NodeId
+// don't return anything just set distance value
+function getNodeDistance(neighbors) {
+    let minDistance = 0
+    neighbors.forEach((neighbor) => {
+        if (neighbors.distance < minDistance) {
+            minDistance = neighbor.distance
+        };
+        return minDistance + 1
     });
-    return changedUnvisited
+};
+
+
+// get object node from nodeId
+// used to put this object in visitedNodesOrder array
+// this array will be iterated to draw nodes 
+function getObject(nodeId) {
+    console.log(nodeId)
+    let allFound = availableNodes.filter(function (node) {
+        if (node.nodeId == nodeId) {
+            return true
+        };
+    });
+    return allFound[0]
+};
+
+
+// setting node distance with calculated distance
+// need nodeId and distance int value
+function setNodeDistance(nodeObject, distance) {
+    let objectIndex = availableNodes.indexOf(nodeObject)
+    let node
 };
 
 
 
-// result of list of all valid nodes
-// check if nodes location are not out of bounds
-// input is [y, x] location with int values
+// update node type to visited
+// need node Id
+function updateNodeType(nodeId) {
+
+};
+
+
+
+
+
 function newNodes(nodeLocation) {
     function getValidNeighbors(nodeLocation) {
         let newCoordinates = [];
@@ -355,16 +430,4 @@ function newNodes(nodeLocation) {
         return checkByCoordinates(newCoordinates);
     };
 };
-
-// check neighbor distance and get lowest distance from neighbor
-function getNodeDistance(nodeId) {
-    let allNeighbors = getValidNeighbors(nodeId);
-    let currentNode = availableNodes.filter(function (node) {
-        if (node.nodeId == nodeId) {
-            return true
-        };
-    });
-
-};
-
 
