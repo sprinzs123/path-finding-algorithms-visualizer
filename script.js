@@ -119,12 +119,12 @@ makeNodes();
 
 
 // add start node to array need not empty array for node exploration
-function inertStartNode() {
-    let startNode = document.querySelector(".start-node").id;
-    let splittedNode = startNode.split("-")
-    nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
-}
-inertStartNode();
+// function inertStartNode() {
+//     let startNode = document.querySelector(".start-node").id;
+//     let splittedNode = startNode.split("-")
+//     nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
+// }
+// inertStartNode();
 
 
 // create final nodes as global variable for node checking
@@ -168,24 +168,24 @@ function checkNodesType(nodeList) {
 
 // function to get all valid node into list
 // iterate over created nodes later in function
-function GetVisitedNodes() {
-    if (foundEnd == false && nodesList.length != 0) {
-        let firstNode = nodesList[0];
-        let NodeId = firstNode[0] + '-' + firstNode[1]
-        if (visitedNodes.has(NodeId) == false) {
-            let firstNode = nodesList[0];
-            visitedNodes.add(NodeId)
-            visitedNodesOrder.push(NodeId)
-            let validNeighbors = newNodes(firstNode);
-            nodesList = nodesList.concat(validNeighbors)
-            nodesList.shift();
-            GetVisitedNodes()
-        } else {
-            nodesList.shift()
-            GetVisitedNodes()
-        }
-    }
-}
+// function GetVisitedNodes() {
+//     if (foundEnd == false && nodesList.length != 0) {
+//         let firstNode = nodesList[0];
+//         let NodeId = firstNode[0] + '-' + firstNode[1]
+//         if (visitedNodes.has(NodeId) == false) {
+//             let firstNode = nodesList[0];
+//             visitedNodes.add(NodeId)
+//             visitedNodesOrder.push(NodeId)
+//             let validNeighbors = newNodes(firstNode);
+//             nodesList = nodesList.concat(validNeighbors)
+//             nodesList.shift();
+//             GetVisitedNodes()
+//         } else {
+//             nodesList.shift()
+//             GetVisitedNodes()
+//         }
+//     }
+// }
 
 
 // iterate over visited nodes that are created
@@ -217,20 +217,20 @@ function startAlgorithm() {
 }
 startAlgorithm()
 
+
+
+
+
+
+// ##########################################################
+// ################ OOP version of program ##################
+// ##########################################################
+
+
 // input is [x, y] location with int values
 // get new/adjacent coordinates of a node
 // node coordinates input, list of new  valid coordinates output as list
 // outputs nodes that exist on table
-// TO DO - maybe combine two functions together for checking valid nodes into this one for raster
-function newNodes(nodeLocation) {
-    let newCoordinates = [];
-    newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
-    newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
-    newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
-    newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
-    newCoordinates = checkByCoordinates(newCoordinates);
-    return checkNodesType(newCoordinates);
-}
 
 
 class Node {
@@ -240,20 +240,28 @@ class Node {
         this.x = null
         this.y = null
         this.distance = Infinity
-    }
+    };
 
     setX() {
         let nodeId = this.nodeId
-        this.x = nodeId.split("-")[1]
-    }
+        this.x = parseInt(nodeId.split("-")[1])
+    };
 
     setY() {
         let nodeId = this.nodeId
-        this.y = nodeId.split("-")[0]
-    }
+        this.y = parseInt(nodeId.split("-")[0])
+    };
+
+    updateType(newType) {
+        self.type = newType
+    };
+    setDistance(num) {
+        this.distance = num
+    };
 }
 
-let unvisitedNodesList = []
+let NodesList = []
+let availableNodes = []
 
 
 // make list of all unvisited nodes
@@ -266,32 +274,97 @@ function unvisitedNodes() {
         let newNode = new Node(nodeId)
         newNode.setY()
         newNode.setX()
-        unvisitedNodesList.push(newNode)
+        availableNodes.push(newNode)
     });
 };
-// unvisitedNodes()
+unvisitedNodes()
+
+
+// add start node to array need not empty array for node exploration
+// also add node object to 
+function inertStartNode() {
+    let startNode = document.querySelector(".start-node").id;
+    let splittedNode = startNode.split("-")
+    nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
+    let newNode = new Node(startNode)
+    newNode.setX()
+    newNode.setY()
+    newNode.updateType('start-node')
+    numNode.setDistance(0)
+}
+inertStartNode();
 
 
 
-// nodes testing to filter out if nodes exist in list/can do true false if node haven't been recorded yet
-testNodes = [{ nodeId: "0-1", nodeType: "unvisited" }, { nodeId: "1-1", nodeType: "unvisited" }, { nodeId: "12-1", nodeType: "unvisited" }]
+
+function newNodes(nodeLocation) {
+    let newCoordinates = [];
+    newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
+    newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
+    newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
+    newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
+    newCoordinates = checkByCoordinates(newCoordinates);
+    return checkNodesType(newCoordinates);
+};
+
+
 
 
 // check array of unvisited nodes
 //  return true if node been discovered already
 function nodeBeenDiscovered(nodeId) {
-    let allFound = testNodes.filter(function (node) {
+    let allFound = availableNodes.filter(function (node) {
         if (node.nodeId == nodeId) {
             return true
         }
     })
     console.log(allFound)
-    if(allFound.length == 0){
-        return true 
+    if (allFound.length == 0) {
+        return true
     } else {
         return false
     }
 }
 
 
-console.log(nodeBeenDiscovered('g'))
+
+
+
+// remove item from unvisited array 
+// the item that removing is current node
+function removeFromUnvisited(nodeId) {
+    let changedUnvisited = availableNodes.filter(function (node) {
+        return node.nodeId != nodeId
+    });
+    return changedUnvisited
+};
+
+
+
+// result of list of all valid nodes
+// check if nodes location are not out of bounds
+// input is [y, x] location with int values
+function newNodes(nodeLocation) {
+    function getValidNeighbors(nodeLocation) {
+        let newCoordinates = [];
+        newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
+        newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
+        newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
+        newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
+        newCoordinates = checkByCoordinates(newCoordinates);
+        return checkByCoordinates(newCoordinates);
+    };
+};
+
+// check neighbor distance and get lowest distance from neighbor
+function getNodeDistance(nodeId) {
+    let allNeighbors = getValidNeighbors(nodeId);
+    let currentNode = availableNodes.filter(function (node) {
+        if (node.nodeId == nodeId) {
+            return true
+        };
+    });
+
+};
+
+
