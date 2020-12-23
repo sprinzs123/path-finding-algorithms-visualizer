@@ -313,7 +313,7 @@ function GetVisitedNodes() {
     let nodeObject = getObject(nodeId)
     let nodePosition = availableNodes.indexOf(nodeObject)
     visitedNodesOrder.push(availableNodes[nodePosition])
-    console.log(getNeighborObjects(validNeighbors))
+    console.log(getNodeDistance(validNeighbors))
 };
 GetVisitedNodes()
 
@@ -328,7 +328,6 @@ function newNodes(nodeLocation) {
     newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
     newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
     newCoordinates = checkByCoordinates(newCoordinates);
-    // console.log(newCoordinates)
     return checkNodesType(newCoordinates);
 };
 
@@ -365,8 +364,6 @@ function checkNodesType(nodeList) {
 };
 
 
-
-
 // check array of unvisited nodes
 //  return true if node been discovered already
 function nodeBeenDiscovered(nodeId) {
@@ -396,17 +393,19 @@ function getNeighborObjects(neighbors){
 };
 
 
-// set distance of of node by looking min distance of a it neighbors
-// list of Node objects that been filtered out
-// don't return anything just set distance value
+// get distance of of node by looking min distance of a it neighbors
+// input is list of [y-x], so need to convert to nodeId string first for filtering
+// make objects first prior filtering
+
 function getNodeDistance(neighbors) {
-    let minDistance = 0
-    neighbors.forEach((neighbor) => {
+    let nodeObjects = getNeighborObjects(neighbors)
+    let minDistance = -1
+    nodeObjects.forEach((neighbor) => {
         if (neighbors.distance < minDistance) {
             minDistance = neighbor.distance
         };
-        return minDistance + 1
     });
+    return minDistance + 1
 };
 
 
@@ -416,7 +415,6 @@ function getNodeDistance(neighbors) {
 // used to put this object in visitedNodesOrder array
 // this array will be iterated to draw nodes 
 function getObject(nodeId) {
-    console.log(nodeId)
     let allFound = availableNodes.filter(function (node) {
         if (node.nodeId == nodeId) {
             return true
