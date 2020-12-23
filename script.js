@@ -68,10 +68,10 @@ wallGenerator();
 
 // nodeLocation is stored as array with [Y, x] variables as int
 // global variables
-let canDrag = false;
 // let visitedNodes = new Set
 // let nodesList = [];
 // let visitedNodesOrder = []
+let canDrag = false;
 let foundEnd = false;
 let endCoordinates = null
 
@@ -117,6 +117,14 @@ function makeNodes() {
 makeNodes();
 
 
+function createEndCheck() {
+    let startNode = document.querySelector(".end-node").id;
+    let splittedNode = startNode.split("-")
+    endCoordinates = [splittedNode[0], parseInt(splittedNode[1])]
+}
+createEndCheck()
+
+
 
 // add start node to array need not empty array for node exploration
 // function inertStartNode() {
@@ -128,42 +136,15 @@ makeNodes();
 
 
 // create final nodes as global variable for node checking
-function createEndCheck() {
-    let startNode = document.querySelector(".end-node").id;
-    let splittedNode = startNode.split("-")
-    endCoordinates = [splittedNode[0], parseInt(splittedNode[1])]
-}
-createEndCheck()
-
-// check if coordinates for future nodes are valid/are not out of bounds
-// in and out list of nodes
-// also check if nodes been visited 
-function checkByCoordinates(nodeList) {
-    let approved = [];
-    nodeList.forEach((nodeLocation) => {
-        if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
-            let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
-            approved.push(nodeLocation);
-        }
-    });
-    return approved;
-}
+// function createEndCheck() {
+//     let startNode = document.querySelector(".end-node").id;
+//     let splittedNode = startNode.split("-")
+//     endCoordinates = [splittedNode[0], parseInt(splittedNode[1])]
+// }
+// createEndCheck()
 
 
-// checking if node is final node
-// need for recursive function check
-function checkNodesType(nodeList) {
-    let approved = [];
-    nodeList.forEach((nodeLocation) => {
-        if (nodeLocation[0] == endCoordinates[0] && nodeLocation[1] == endCoordinates[1]) {
-            foundEnd = true;
-            console.log('Found final')
-        } else {
-            approved.push(nodeLocation)
-        }
-    });
-    return approved;
-}
+// }
 
 
 // function to get all valid node into list
@@ -219,6 +200,27 @@ startAlgorithm()
 
 
 
+// function GetVisitedNodes() {
+//     if (foundEnd == false && nodesList.length != 0) {
+//         let firstNode = nodesList[0];
+//         let NodeId = firstNode[0] + '-' + firstNode[1]
+//         if (visitedNodes.has(NodeId) == false) {
+//             let firstNode = nodesList[0];
+//             visitedNodes.add(NodeId)
+
+
+//             visitedNodesOrder.push(NodeId)
+//             let validNeighbors = newNodes(firstNode);
+//             nodesList = nodesList.concat(validNeighbors)
+//             nodesList.shift();
+//             GetVisitedNodes()
+//         } else {
+//             nodesList.shift()
+//             GetVisitedNodes()
+//         }
+//     }
+// }
+
 
 
 
@@ -265,7 +267,7 @@ class Node {
     setDistance(num) {
         this.distance = num
     };
-}
+};
 
 // make list of all unvisited nodes
 // where going to check for valid nodes
@@ -311,34 +313,9 @@ function GetVisitedNodes() {
     let nodeObject = getObject(nodeId)
     let nodePosition = availableNodes.indexOf(nodeObject)
     visitedNodesOrder.push(availableNodes[nodePosition])
+    console.log(getNeighborObjects(validNeighbors))
 };
 GetVisitedNodes()
-
-
-
-// function GetVisitedNodes() {
-//     if (foundEnd == false && nodesList.length != 0) {
-//         let firstNode = nodesList[0];
-//         let NodeId = firstNode[0] + '-' + firstNode[1]
-//         if (visitedNodes.has(NodeId) == false) {
-//             let firstNode = nodesList[0];
-//             visitedNodes.add(NodeId)
-
-
-//             visitedNodesOrder.push(NodeId)
-//             let validNeighbors = newNodes(firstNode);
-//             nodesList = nodesList.concat(validNeighbors)
-//             nodesList.shift();
-//             GetVisitedNodes()
-//         } else {
-//             nodesList.shift()
-//             GetVisitedNodes()
-//         }
-//     }
-// }
-
-
-
 
 
 // result of list of all valid nodes
@@ -351,8 +328,43 @@ function newNodes(nodeLocation) {
     newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
     newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
     newCoordinates = checkByCoordinates(newCoordinates);
+    // console.log(newCoordinates)
     return checkNodesType(newCoordinates);
 };
+
+
+
+// check if coordinates for future nodes are valid/are not out of bounds
+// in and out list of nodes
+// also check if nodes been visited 
+function checkByCoordinates(nodeList) {
+    let approved = [];
+    nodeList.forEach((nodeLocation) => {
+        if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
+            let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
+            approved.push(nodeLocation);
+        }
+    });
+    return approved;
+};
+
+
+// checking if node is final node
+// need for recursive function check
+function checkNodesType(nodeList) {
+    let approved = [];
+    nodeList.forEach((nodeLocation) => {
+        if (nodeLocation[0] == endCoordinates[0] && nodeLocation[1] == endCoordinates[1]) {
+            foundEnd = true;
+            console.log('Found final')
+        } else {
+            approved.push(nodeLocation)
+        }
+    });
+    return approved;
+};
+
+
 
 
 // check array of unvisited nodes
@@ -372,8 +384,20 @@ function nodeBeenDiscovered(nodeId) {
 }
 
 
+// get list of neighbor objects
+// input is list of [y-x], so need to convert to nodeId string first for filtering
+function getNeighborObjects(neighbors){
+    let nodeObjects = []
+    neighbors.forEach((neighbor) =>{
+        let nodeId = neighbor[0] + '-' +neighbor[1]
+        nodeObjects.push(getObject(nodeId))
+    });
+    return nodeObjects
+};
+
+
 // set distance of of node by looking min distance of a it neighbors
-// list of NodeId
+// list of Node objects that been filtered out
 // don't return anything just set distance value
 function getNodeDistance(neighbors) {
     let minDistance = 0
@@ -384,6 +408,8 @@ function getNodeDistance(neighbors) {
         return minDistance + 1
     });
 };
+
+
 
 
 // get object node from nodeId
@@ -419,15 +445,15 @@ function updateNodeType(nodeId) {
 
 
 
-function newNodes(nodeLocation) {
-    function getValidNeighbors(nodeLocation) {
-        let newCoordinates = [];
-        newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
-        newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
-        newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
-        newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
-        newCoordinates = checkByCoordinates(newCoordinates);
-        return checkByCoordinates(newCoordinates);
-    };
-};
+// function newNodes(nodeLocation) {
+//     function getValidNeighbors(nodeLocation) {
+//         let newCoordinates = [];
+//         newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
+//         newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
+//         newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
+//         newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
+//         newCoordinates = checkByCoordinates(newCoordinates);
+//         return checkByCoordinates(newCoordinates);
+//     };
+// };
 
