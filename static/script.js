@@ -109,8 +109,8 @@ function addWalls() {
 
 // hard coded start and end points
 function makeNodes() {
-    let start = document.getElementById("8-40");
-    let end = document.getElementById("9-45");
+    let start = document.getElementById("8-15");
+    let end = document.getElementById("8-35");
     start.classList = "start-node";
     end.classList = "end-node";
 }
@@ -189,8 +189,8 @@ function unvisitedNodes() {
 // add start node to array need not empty array for node exploration
 // also add node object to 
 function inertStartNode() {
-
     let startNode = document.querySelector(".start-node").id;
+
     let splittedNode = startNode.split("-")
     nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
     let newNode = new Node(startNode)
@@ -390,27 +390,31 @@ startAlgorithm()
 
 // make solution
 function getSolution(nodeId) {
-    let nodeLocation = [parseInt(nodeId.split("-")[0]), parseInt(nodeId.split("-")[1])]
-    let validNeighbors = newNodes(nodeLocation)
-    let neighborObjects = getNeighborObjects(validNeighbors)
-    let foundStart = false
+    if(nodeId != null){
+        let nodeLocation = [parseInt(nodeId.split("-")[0]), parseInt(nodeId.split("-")[1])]
+        let validNeighbors = newNodes(nodeLocation)
+        let neighborObjects = getNeighborObjects(validNeighbors)
+        let foundStart = false
+    
+        neighborObjects.forEach((nodeObject) => {
+            if(nodeObject != undefined){
+                if(nodeObject.distance == 0){
+                    foundStart = true
+                };
+            }
+        });
+    
+    
+        if(foundStart == false) {
+            solution.unshift(nodeId)
+            let previousNode = previousNodeId(neighborObjects)
+            getSolution(previousNode)
+        } else {
+            solution.unshift(nodeId)
+        };
 
-    neighborObjects.forEach((nodeObject) => {
-        if(nodeObject != undefined){
-            if(nodeObject.distance == 0){
-                foundStart = true
-            };
-        }
-    });
+    }
 
-
-    if(foundStart == false) {
-        solution.unshift(nodeId)
-        let previousNode = previousNodeId(neighborObjects)
-        getSolution(previousNode)
-    } else {
-        solution.unshift(nodeId)
-    };
 };
 
 
