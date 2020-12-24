@@ -47,7 +47,7 @@ li{
 #visit-node-2{
     background: violet;
 }
-#path-node{
+.path-node{
     background: yellow;
 }
 
