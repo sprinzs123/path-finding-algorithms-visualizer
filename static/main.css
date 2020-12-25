@@ -51,7 +51,12 @@ li{
     background: violet;
 }
 .path-node{
-    background: yellow;
+    border: 1px solid lightblue;
+    animation-duration: 5s;
+    animation-name: animate-path;
+    animation-fill-mode: forwards; 
+    animation-delay: 1s;  
+    /* background: yellow; */
 }
 
 .start-node{
@@ -65,8 +70,58 @@ li{
     background: black;
 }
 .visited-node{
-    background: teal;
+    background: rgba(0, 190, 218, 0.75);
+    animation-duration: 4s;
+    animation-name: animate-discovered;
+    animation-fill-mode: forwards;    
 }
+
+
+/* animation for changing node color and how they show up */
+@keyframes animate-discovered{
+    0% {
+        transform: scale(.3);
+        background-color: rgba(0, 0, 66, 0.75);
+        border-radius: 100%;
+      }
+    
+      50% {
+        background-color: rgba(17, 104, 217, 0.75);
+      }
+    
+      75% {
+        transform: scale(1.2);
+        background-color: rgba(0, 217, 159, 0.75);
+      }
+    
+      100% {
+        transform: scale(1.0);
+        background-color: rgba(0, 190, 218, 0.75);
+      }
+    }
+
+@keyframes animate-path{
+    0% {
+        transform: scale(0.3);
+        background-color: rgba(0, 190, 218, 0.75);
+    }   
+    20% {
+        transform: scale(0.5);
+        background: yellow;
+
+    }
+    50% {
+        transform: scale(1.2);
+        background: yellow;
+
+    }
+    100% {
+        transform: scale(1.0);
+        background: yellow;
+
+    }
+    }
+
 
 
 /* control buttons divs */
@@ -75,3 +130,4 @@ li{
     justify-content: center;
     margin-bottom: 1em;
 }
+
