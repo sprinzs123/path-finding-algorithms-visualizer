@@ -221,7 +221,7 @@ function GetVisitedNodes() {
             visitedNodesOrder.push(availableNodes[nodePosition])
             let nodeDistance = getNodeDistance(validNeighbors)
             availableNodes[nodePosition].distance = nodeDistance
-            availableNodes[nodePosition].nodeType = 'visited' 
+            availableNodes[nodePosition].nodeType = 'visited'
             GetVisitedNodes()
         } else {
             nodesList.shift()
@@ -310,14 +310,14 @@ function getNeighborObjects(neighbors) {
 
 function getNodeDistance(neighbors) {
     let nodeObjects = getNeighborObjects(neighbors)
-    let distances = []    
+    let distances = []
     nodeObjects.forEach((neighbor) => {
-        if(neighbor != undefined){
+        if (neighbor != undefined) {
             distances.push(neighbor.distance)
         };
     });
     distances.sort()
-    if(distances[0] == Infinity){
+    if (distances[0] == Infinity) {
         return 0
     } else {
         return distances[0] + 1
@@ -334,44 +334,41 @@ function getObject(nodeId) {
             return true
         };
     });
-    if(allFound[0] != undefined){
+    if (allFound[0] != undefined) {
         return allFound[0]
     };
 };
 
 
-function animateDijkstra(){
+function animateDijkstra() {
     visitedNodesOrder.shift()
     solution.pop()
     for (let i = 0; i <= visitedNodesOrder.length; i++) {
-      if (i === visitedNodesOrder.length) {
+        if (i === visitedNodesOrder.length) {
+            setTimeout(() => {
+                animateShortestPath();
+            }, 10 * i);
+            return;
+        }
         setTimeout(() => {
-        animateShortestPath();
-        console.log('here')
+            const node = visitedNodesOrder[i];
+            document.getElementById(node.nodeId).className =
+                'visited-node';
         }, 10 * i);
-        return;
-      }
-      setTimeout(() => {
-        const node = visitedNodesOrder[i];
-        document.getElementById(node.nodeId).className =
-          'visited-node';
-      }, 10 * i);
     }
-  }
+}
 
 
 function animateShortestPath() {
-    console.log(solution)
-
     for (let i = 0; i < solution.length; i++) {
-      setTimeout(() => {
-        const node = solution[i];
-        document.getElementById(node).className =
-          'path-node';
-      }, 50 * i);
+        setTimeout(() => {
+            const node = solution[i];
+            document.getElementById(node).className =
+                'path-node';
+        }, 50 * i);
     }
-  }
-  
+}
+
 
 // start algorith by submit btn
 function startAlgorithm() {
@@ -390,22 +387,22 @@ startAlgorithm()
 
 // make solution
 function getSolution(nodeId) {
-    if(nodeId != null){
+    if (nodeId != null) {
         let nodeLocation = [parseInt(nodeId.split("-")[0]), parseInt(nodeId.split("-")[1])]
         let validNeighbors = newNodes(nodeLocation)
         let neighborObjects = getNeighborObjects(validNeighbors)
         let foundStart = false
-    
+
         neighborObjects.forEach((nodeObject) => {
-            if(nodeObject != undefined){
-                if(nodeObject.distance == 0){
+            if (nodeObject != undefined) {
+                if (nodeObject.distance == 0) {
                     foundStart = true
                 };
             }
         });
-    
-    
-        if(foundStart == false) {
+
+
+        if (foundStart == false) {
             solution.unshift(nodeId)
             let previousNode = previousNodeId(neighborObjects)
             getSolution(previousNode)
@@ -421,12 +418,12 @@ function getSolution(nodeId) {
 // get nodeId of smallest min distance from object list
 // need for backtracking recursive call 
 // gives node where previous node came from
-function previousNodeId(neighborObjects){
+function previousNodeId(neighborObjects) {
     let smallest = Infinity
     let nodeId = null
-    neighborObjects.forEach((node) =>{
-        if(node != undefined){
-            if(node.distance < smallest){
+    neighborObjects.forEach((node) => {
+        if (node != undefined) {
+            if (node.distance < smallest) {
                 smallest = node.distance
                 nodeId = node.nodeId
             };
@@ -435,3 +432,33 @@ function previousNodeId(neighborObjects){
     });
     return nodeId
 };
+
+
+// reset wall nodes to blank nodes 
+function resetWalls() {
+    let clearBtn = document.querySelector('.clear-board')
+    clearBtn.addEventListener('click', () => {
+        let allWalls = document.querySelectorAll('.wall-node')
+        allWalls.forEach((node) => {
+            node.classList = 'unvisited-nodes'
+        })
+    })
+}
+resetWalls()
+
+
+// make demo of algorith
+// have predefined array of wall nodes then run maze solver right after
+function makeDemo() {
+    let demoBtn = document.querySelector('.make-demo')
+    demoBtn.addEventListener('click', () => {
+        let newWalls = ["1-22", "2-22",   "3-19","3-22","4-19", "4-22","5-19","5-22", "6-14","6-15","6-16","6-17","6-18","6-19","6-20","6-21","6-22",
+        "6-23","6-24","6-25","6-26","6-27","6-28","6-29","7-19","7-24","8-19","8-24","8-29","9-19","9-24","9-29","10-19","10-24","10-29","11-19","11-23","11-24",
+        "11-25","11-26","11-29","12-19","12-23","12-29","13-23","13-29","13-30","13-31","13-32","13-33","13-34","13-35","13-36","13-37","14-23","15-23"];
+        newWalls.forEach((nodeId) => {
+            document.getElementById(nodeId).classList = 'wall-node'
+        })
+    })
+}
+makeDemo()
+

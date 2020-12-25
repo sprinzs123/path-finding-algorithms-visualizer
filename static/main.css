@@ -55,7 +55,7 @@ li{
     animation-duration: 5s;
     animation-name: animate-path;
     animation-fill-mode: forwards; 
-    animation-delay: 1s;  
+    animation-delay: 2s;  
     /* background: yellow; */
 }
 
@@ -71,7 +71,7 @@ li{
 }
 .visited-node{
     background: rgba(0, 190, 218, 0.75);
-    animation-duration: 4s;
+    animation-duration: 3s;
     animation-name: animate-discovered;
     animation-fill-mode: forwards;    
 }
@@ -121,7 +121,6 @@ li{
 
     }
     }
-
 
 
 /* control buttons divs */
