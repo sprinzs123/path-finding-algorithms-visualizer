@@ -52,10 +52,9 @@ li{
 }
 .path-node{
     border: 1px solid lightblue;
-    animation-duration: 5s;
+    animation-duration: 3s;
     animation-name: animate-path;
     animation-fill-mode: forwards; 
-    animation-delay: 2s;  
     /* background: yellow; */
 }
 

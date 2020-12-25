@@ -2,6 +2,8 @@
 
 let width = 50;
 let height = 20;
+let isRunning = false
+
 
 // creates grid using html tables
 function createGrid() {
@@ -54,13 +56,15 @@ function makeStartNodes(newNode) {
 // make walls
 function wallGenerator() {
     let allUnvisited = document.querySelectorAll(".unvisited");
-    allUnvisited.forEach((point) => {
-        point.addEventListener("mouseover", function () {
-            if (canDrag == true) {
-                point.classList = "wall-node";
-            }
+    if(isRunning == false){
+        allUnvisited.forEach((point) => {
+            point.addEventListener("mouseover", function () {
+                if (canDrag == true) {
+                    point.classList = "wall-node";
+                }
+            });
         });
-    });
+    }
 }
 wallGenerator();
 
@@ -134,15 +138,11 @@ createEndCheck()
 // get new/adjacent coordinates of a node
 // node coordinates input, list of new  valid coordinates output as list
 // outputs nodes that exist on table
-
-
-
 let nodesList = []
 let availableNodes = []
 let visitedNodes = new Set
 let visitedNodesOrder = []
 let solution = []
-
 
 class Node {
     constructor(nodeId) {
@@ -190,7 +190,6 @@ function unvisitedNodes() {
 // also add node object to 
 function inertStartNode() {
     let startNode = document.querySelector(".start-node").id;
-
     let splittedNode = startNode.split("-")
     nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
     let newNode = new Node(startNode)
@@ -374,12 +373,14 @@ function animateShortestPath() {
 function startAlgorithm() {
     let startBtn = document.querySelector('.submit-btn')
     startBtn.addEventListener('click', function () {
+        isRunning = true
         unvisitedNodes()
         addWalls()
         GetVisitedNodes()
         let endNode = document.querySelector('.end-node').id
         getSolution(endNode)
         animateDijkstra()
+        isRunning = false
     });
 };
 startAlgorithm()
@@ -439,9 +440,21 @@ function resetWalls() {
     let clearBtn = document.querySelector('.clear-board')
     clearBtn.addEventListener('click', () => {
         let allWalls = document.querySelectorAll('.wall-node')
+        let allVisited = document.querySelectorAll('.visited-node')
+        let allPath = document.querySelectorAll('.path-node')
+
         allWalls.forEach((node) => {
-            node.classList = 'unvisited-nodes'
+            node.classList = 'unvisited'        
         })
+        allVisited.forEach((node) => {
+            node.classList = 'unvisited'        
+        })
+        allPath.forEach((node) => {
+            node.classList = 'unvisited'        
+        })
+        makeNodes();
+
+
     })
 }
 resetWalls()
@@ -452,6 +465,8 @@ resetWalls()
 function makeDemo() {
     let demoBtn = document.querySelector('.make-demo')
     demoBtn.addEventListener('click', () => {
+        console.log('here')
+        makeNodes();
         let newWalls = ["1-22", "2-22",   "3-19","3-22","4-19", "4-22","5-19","5-22", "6-14","6-15","6-16","6-17","6-18","6-19","6-20","6-21","6-22",
         "6-23","6-24","6-25","6-26","6-27","6-28","6-29","7-19","7-24","8-19","8-24","8-29","9-19","9-24","9-29","10-19","10-24","10-29","11-19","11-23","11-24",
         "11-25","11-26","11-29","12-19","12-23","12-29","13-23","13-29","13-30","13-31","13-32","13-33","13-34","13-35","13-36","13-37","14-23","15-23"];
