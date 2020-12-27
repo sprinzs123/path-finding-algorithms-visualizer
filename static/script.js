@@ -1,5 +1,5 @@
 // nodes are stored in x y format with index starting at 0
-
+// is running check is used to prevent drawing of new walls when algorith is running
 let width = 50;
 let height = 20;
 let isRunning = false
@@ -50,13 +50,12 @@ function makeStartNodes(newNode) {
         });
     });
 }
-// makeStartNodes('end-node')
-// makeStartNodes('start-node')
+makeStartNodes('start-node')
 
 // make walls
 function wallGenerator() {
     let allUnvisited = document.querySelectorAll(".unvisited");
-    if(isRunning == false){
+    if (isRunning == false) {
         allUnvisited.forEach((point) => {
             point.addEventListener("mouseover", function () {
                 if (canDrag == true) {
@@ -69,14 +68,7 @@ function wallGenerator() {
 wallGenerator();
 
 
-
-// nodeLocation is stored as array with [Y, x] variables as int
-// global variables
-// let visitedNodes = new Set
-// let nodesList = [];
-// let visitedNodesOrder = []
 let canDrag = false;
-let foundEnd = false;
 let endCoordinates = null
 
 // check if mouse is down
@@ -102,13 +94,7 @@ isMouseDown();
 isMouseReleased();
 
 
-// add wall nodes to visited nodes
-function addWalls() {
-    let = allWallNodes = document.querySelectorAll('.wall-node');
-    allWallNodes.forEach((wallNode) => {
-        visitedNodes.add(wallNode.id)
-    });
-};
+
 
 
 // hard coded start and end points
@@ -133,16 +119,6 @@ createEndCheck()
 // ################ OOP version of program ##################
 // ##########################################################
 
-
-// input is [x, y] location with int values
-// get new/adjacent coordinates of a node
-// node coordinates input, list of new  valid coordinates output as list
-// outputs nodes that exist on table
-let nodesList = []
-let availableNodes = []
-let visitedNodes = new Set
-let visitedNodesOrder = []
-let solution = []
 
 class Node {
     constructor(nodeId) {
@@ -171,63 +147,8 @@ class Node {
     };
 };
 
-// make list of all unvisited nodes
-// where going to check for valid nodes
-// get nodeId and pas into function that is going to make all objects
-function unvisitedNodes() {
-    let allUnvisitedNodes = document.querySelectorAll('.unvisited')
-    allUnvisitedNodes.forEach((nodeObject) => {
-        let nodeId = nodeObject.id
-        let newNode = new Node(nodeId)
-        newNode.setY()
-        newNode.setX()
-        availableNodes.push(newNode)
-    });
-};
 
 
-// add start node to array need not empty array for node exploration
-// also add node object to 
-function inertStartNode() {
-    let startNode = document.querySelector(".start-node").id;
-    let splittedNode = startNode.split("-")
-    nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
-    let newNode = new Node(startNode)
-    newNode.setX()
-    newNode.setY()
-    newNode.updateType('start-node')
-    newNode.setDistance(0)
-    availableNodes.push(newNode)
-}
-inertStartNode();
-
-
-// function to get all valid node into list
-// iterate over created nodes later in function
-function GetVisitedNodes() {
-    if (foundEnd == false && nodesList.length != 0) {
-        let firstNode = nodesList[0];
-        let NodeId = firstNode[0] + '-' + firstNode[1]
-        if (visitedNodes.has(NodeId) == false) {
-            let firstNode = nodesList[0];
-            let nodeId = firstNode[0] + '-' + firstNode[1]
-            visitedNodes.add(nodeId)
-            let validNeighbors = newNodes(firstNode);
-            nodesList = nodesList.concat(validNeighbors)
-
-            let nodeObject = getObject(nodeId)
-            let nodePosition = availableNodes.indexOf(nodeObject)
-            visitedNodesOrder.push(availableNodes[nodePosition])
-            let nodeDistance = getNodeDistance(validNeighbors)
-            availableNodes[nodePosition].distance = nodeDistance
-            availableNodes[nodePosition].nodeType = 'visited'
-            GetVisitedNodes()
-        } else {
-            nodesList.shift()
-            GetVisitedNodes()
-        }
-    }
-};
 
 
 // result of list of all valid nodes
@@ -291,129 +212,209 @@ function nodeBeenDiscovered(nodeId) {
 }
 
 
-// get list of neighbor objects
-// input is list of [y-x], so need to convert to nodeId string first for filtering
-function getNeighborObjects(neighbors) {
-    let nodeObjects = []
-    neighbors.forEach((neighbor) => {
-        let nodeId = neighbor[0] + '-' + neighbor[1]
-        nodeObjects.push(getObject(nodeId))
-    });
-    return nodeObjects
-};
-
-
-// get distance of of node by looking min distance of a it neighbors
-// input is list of [y-x], so need to convert to nodeId string first for filtering
-// make objects first prior filtering
-
-function getNodeDistance(neighbors) {
-    let nodeObjects = getNeighborObjects(neighbors)
-    let distances = []
-    nodeObjects.forEach((neighbor) => {
-        if (neighbor != undefined) {
-            distances.push(neighbor.distance)
-        };
-    });
-    distances.sort()
-    if (distances[0] == Infinity) {
-        return 0
-    } else {
-        return distances[0] + 1
-    }
-};
-
-
-// get object node from nodeId
-// used to put this object in visitedNodesOrder array
-// this array will be iterated to draw nodes 
-function getObject(nodeId) {
-    let allFound = availableNodes.filter(function (node) {
-        if (node.nodeId == nodeId) {
-            return true
-        };
-    });
-    if (allFound[0] != undefined) {
-        return allFound[0]
-    };
-};
-
-
-function animateDijkstra() {
-    visitedNodesOrder.shift()
-    solution.pop()
-    for (let i = 0; i <= visitedNodesOrder.length; i++) {
-        if (i === visitedNodesOrder.length) {
-            setTimeout(() => {
-                animateShortestPath();
-            }, 10 * i);
-            return;
-        }
-        setTimeout(() => {
-            const node = visitedNodesOrder[i];
-            document.getElementById(node.nodeId).className =
-                'visited-node';
-        }, 10 * i);
-    }
-}
-
-
-function animateShortestPath() {
-    for (let i = 0; i < solution.length; i++) {
-        setTimeout(() => {
-            const node = solution[i];
-            document.getElementById(node).className =
-                'path-node';
-        }, 50 * i);
-    }
-}
-
-
 // start algorith by submit btn
+// need to move functions that access previous global variables inside function because functions couldn't access global variables
 function startAlgorithm() {
     let startBtn = document.querySelector('.submit-btn')
     startBtn.addEventListener('click', function () {
+        let foundEnd = false;
+        let nodesList = []
+        let availableNodes = []
+        let visitedNodes = new Set
+        let visitedNodesOrder = []
+        let solution = []
+
+
+        inertStartNode();
+
+        resetNodes()
+        addWalls()
         isRunning = true
         unvisitedNodes()
-        addWalls()
         GetVisitedNodes()
         let endNode = document.querySelector('.end-node').id
         getSolution(endNode)
         animateDijkstra()
         isRunning = false
+
+        // add start node to array need not empty array for node exploration
+        // also add node object to 
+        function inertStartNode() {
+            let startNode = document.querySelector(".start-node").id;
+            let splittedNode = startNode.split("-")
+            nodesList.push([parseInt(splittedNode[0]), parseInt(splittedNode[1])]);
+            let newNode = new Node(startNode)
+            newNode.setX()
+            newNode.setY()
+            newNode.updateType('start-node')
+            newNode.setDistance(0)
+            availableNodes.push(newNode)
+        }
+
+        // make list of all unvisited nodes
+        // where going to check for valid nodes
+        // get nodeId and pas into function that is going to make all objects
+        function unvisitedNodes() {
+            let allUnvisitedNodes = document.querySelectorAll('.unvisited')
+            allUnvisitedNodes.forEach((nodeObject) => {
+                let nodeId = nodeObject.id
+                let newNode = new Node(nodeId)
+                newNode.setY()
+                newNode.setX()
+                availableNodes.push(newNode)
+            });
+        };
+
+
+        // function to get all valid node into list
+        // iterate over created nodes later in function
+        function GetVisitedNodes() {
+            if (foundEnd == false && nodesList.length != 0) {
+                let firstNode = nodesList[0];
+                let NodeId = firstNode[0] + '-' + firstNode[1]
+                if (visitedNodes.has(NodeId) == false) {
+                    let firstNode = nodesList[0];
+                    let nodeId = firstNode[0] + '-' + firstNode[1]
+                    visitedNodes.add(nodeId)
+                    let validNeighbors = newNodes(firstNode);
+                    nodesList = nodesList.concat(validNeighbors)
+
+                    let nodeObject = getObject(nodeId)
+                    let nodePosition = availableNodes.indexOf(nodeObject)
+                    visitedNodesOrder.push(availableNodes[nodePosition])
+                    let nodeDistance = getNodeDistance(validNeighbors)
+                    availableNodes[nodePosition].distance = nodeDistance
+                    availableNodes[nodePosition].nodeType = 'visited'
+                    GetVisitedNodes()
+                } else {
+                    nodesList.shift()
+                    GetVisitedNodes()
+                }
+            }
+        };
+
+
+        // get object node from nodeId
+        // used to put this object in visitedNodesOrder array
+        // this array will be iterated to draw nodes 
+        function getObject(nodeId) {
+            let allFound = availableNodes.filter(function (node) {
+                if (node.nodeId == nodeId) {
+                    return true
+                };
+            });
+            if (allFound[0] != undefined) {
+                return allFound[0]
+            };
+        };
+
+
+        // get distance of of node by looking min distance of a it neighbors
+        // input is list of [y-x], so need to convert to nodeId string first for filtering
+        // make objects first prior filtering
+        function getNodeDistance(neighbors) {
+            let nodeObjects = getNeighborObjects(neighbors)
+            let distances = []
+            nodeObjects.forEach((neighbor) => {
+                if (neighbor != undefined) {
+                    distances.push(neighbor.distance)
+                };
+            });
+            distances.sort()
+            if (distances[0] == Infinity) {
+                return 0
+            } else {
+                return distances[0] + 1
+            }
+        };
+
+
+        // get list of neighbor objects
+        // input is list of [y-x], so need to convert to nodeId string first for filtering
+        function getNeighborObjects(neighbors) {
+            let nodeObjects = []
+            neighbors.forEach((neighbor) => {
+                let nodeId = neighbor[0] + '-' + neighbor[1]
+                nodeObjects.push(getObject(nodeId))
+            });
+            return nodeObjects
+        };
+
+
+        // make solution
+        function getSolution(nodeId) {
+            if (nodeId != null) {
+                let nodeLocation = [parseInt(nodeId.split("-")[0]), parseInt(nodeId.split("-")[1])]
+                let validNeighbors = newNodes(nodeLocation)
+                let neighborObjects = getNeighborObjects(validNeighbors)
+                let foundStart = false
+
+                neighborObjects.forEach((nodeObject) => {
+                    if (nodeObject != undefined) {
+                        if (nodeObject.distance == 0) {
+                            foundStart = true
+                        };
+                    }
+                });
+                if (foundStart == false) {
+                    solution.unshift(nodeId)
+                    let previousNode = previousNodeId(neighborObjects)
+                    getSolution(previousNode)
+                } else {
+                    solution.unshift(nodeId)
+                };
+            }
+        };
+
+        function animateDijkstra() {
+            visitedNodesOrder.shift()
+            solution.pop()
+            for (let i = 0; i <= visitedNodesOrder.length; i++) {
+                if (i === visitedNodesOrder.length) {
+                    setTimeout(() => {
+                        animateShortestPath();
+                    }, 10 * i);
+                    return;
+                }
+                setTimeout(() => {
+                    const node = visitedNodesOrder[i];
+                    if (node != undefined) {
+                        document.getElementById(node.nodeId).className =
+                            'visited-node';
+                    }
+                }, 10 * i);
+            }
+        }
+
+
+        function animateShortestPath() {
+            for (let i = 0; i < solution.length; i++) {
+                setTimeout(() => {
+                    const node = solution[i];
+                    document.getElementById(node).className =
+                        'path-node';
+                }, 50 * i);
+            }
+        }
+
+
+        // add wall nodes to visited nodes set 
+        // make ure that that won't explore wall nodes
+        function addWalls() {
+            let allWallNodes = document.querySelectorAll('.wall-node');
+            allWallNodes.forEach((wallNode) => {
+                visitedNodes.add(wallNode.id)
+            });
+        };
+
+
+
     });
 };
 startAlgorithm()
 
 
-// make solution
-function getSolution(nodeId) {
-    if (nodeId != null) {
-        let nodeLocation = [parseInt(nodeId.split("-")[0]), parseInt(nodeId.split("-")[1])]
-        let validNeighbors = newNodes(nodeLocation)
-        let neighborObjects = getNeighborObjects(validNeighbors)
-        let foundStart = false
 
-        neighborObjects.forEach((nodeObject) => {
-            if (nodeObject != undefined) {
-                if (nodeObject.distance == 0) {
-                    foundStart = true
-                };
-            }
-        });
-
-
-        if (foundStart == false) {
-            solution.unshift(nodeId)
-            let previousNode = previousNodeId(neighborObjects)
-            getSolution(previousNode)
-        } else {
-            solution.unshift(nodeId)
-        };
-
-    }
-
-};
 
 
 // get nodeId of smallest min distance from object list
@@ -435,22 +436,52 @@ function previousNodeId(neighborObjects) {
 };
 
 
+// reset visited and path nodes
+// make nodes back to unvisited / need if want to rerun solver again
+function resetNodes() {
+    let allVisited = document.querySelectorAll('.visited-node')
+    let allPath = document.querySelectorAll('.path-node')
+    allVisited.forEach((node) => {
+        node.classList = 'unvisited'
+    })
+    allPath.forEach((node) => {
+        node.classList = 'unvisited'
+    })
+}
+
+
+// resets value of in array for solution
+// run at the end of algorithm
+// rerunning functions that are responsible for maze generation
+function resetValues() {
+    nodesList.length = 0
+    availableNodes.length = 0
+    visitedNodes.clear()
+    visitedNodesOrder.length = 0
+    solution = []
+    makeNodes();
+    makeStartNodes('start-node')
+
+}
+
+
 // reset wall nodes to blank nodes 
 function resetWalls() {
     let clearBtn = document.querySelector('.clear-board')
     clearBtn.addEventListener('click', () => {
+        console.log('reset')
         let allWalls = document.querySelectorAll('.wall-node')
         let allVisited = document.querySelectorAll('.visited-node')
         let allPath = document.querySelectorAll('.path-node')
 
         allWalls.forEach((node) => {
-            node.classList = 'unvisited'        
+            node.classList = 'unvisited'
         })
         allVisited.forEach((node) => {
-            node.classList = 'unvisited'        
+            node.classList = 'unvisited'
         })
         allPath.forEach((node) => {
-            node.classList = 'unvisited'        
+            node.classList = 'unvisited'
         })
         makeNodes();
 
@@ -465,11 +496,11 @@ resetWalls()
 function makeDemo() {
     let demoBtn = document.querySelector('.make-demo')
     demoBtn.addEventListener('click', () => {
-        console.log('here')
+        resetWalls()
         makeNodes();
-        let newWalls = ["1-22", "2-22",   "3-19","3-22","4-19", "4-22","5-19","5-22", "6-14","6-15","6-16","6-17","6-18","6-19","6-20","6-21","6-22",
-        "6-23","6-24","6-25","6-26","6-27","6-28","6-29","7-19","7-24","8-19","8-24","8-29","9-19","9-24","9-29","10-19","10-24","10-29","11-19","11-23","11-24",
-        "11-25","11-26","11-29","12-19","12-23","12-29","13-23","13-29","13-30","13-31","13-32","13-33","13-34","13-35","13-36","13-37","14-23","15-23"];
+        let newWalls = ["1-22", "2-22", "3-19", "3-22", "4-19", "4-22", "5-19", "5-22", "6-14", "6-15", "6-16", "6-17", "6-18", "6-19", "6-20", "6-21", "6-22",
+            "6-23", "6-24", "6-25", "6-26", "6-27", "6-28", "6-29", "7-19", "7-24", "8-19", "8-24", "8-29", "9-19", "9-24", "9-29", "10-19", "10-24", "10-29", "11-19", "11-23", "11-24",
+            "11-25", "11-26", "11-29", "12-19", "12-23", "12-29", "13-23", "13-29", "13-30", "13-31", "13-32", "13-33", "13-34", "13-35", "13-36", "13-37", "14-23", "15-23"];
         newWalls.forEach((nodeId) => {
             document.getElementById(nodeId).classList = 'wall-node'
         })

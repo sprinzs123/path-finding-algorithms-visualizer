@@ -45,11 +45,17 @@ li{
     background: black;
 }
 #visit-node-1{
-    background: teal;
+    background-color: rgba(17, 104, 217, 0.75);
 }
 #visit-node-2{
-    background: violet;
+    background-color: rgba(0, 190, 218, 0.75);
 }
+
+#path-node{
+    background: yellow;
+}
+
+
 .path-node{
     border: 1px solid lightblue;
     animation-duration: 3s;
