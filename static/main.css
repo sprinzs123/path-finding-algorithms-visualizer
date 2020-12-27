@@ -76,7 +76,7 @@ li{
 }
 .visited-node{
     background: rgba(0, 190, 218, 0.75);
-    animation-duration: 3s;
+    animation-duration: 2s;
     animation-name: animate-discovered;
     animation-fill-mode: forwards;    
 }

@@ -148,70 +148,6 @@ class Node {
 };
 
 
-
-
-
-// result of list of all valid nodes
-// check if nodes location are not out of bounds
-// input is [y, x] location with int values
-function newNodes(nodeLocation) {
-    let newCoordinates = [];
-    newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
-    newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
-    newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
-    newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
-    newCoordinates = checkByCoordinates(newCoordinates);
-    return checkNodesType(newCoordinates);
-};
-
-
-// check if coordinates for future nodes are valid/are not out of bounds
-// in and out list of nodes
-// also check if nodes been visited 
-function checkByCoordinates(nodeList) {
-    let approved = [];
-    nodeList.forEach((nodeLocation) => {
-        if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
-            let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
-            approved.push(nodeLocation);
-        }
-    });
-    return approved;
-};
-
-
-// checking if node is final node
-// need for recursive function check
-function checkNodesType(nodeList) {
-    let approved = [];
-    nodeList.forEach((nodeLocation) => {
-        if (nodeLocation[0] == endCoordinates[0] && nodeLocation[1] == endCoordinates[1]) {
-            foundEnd = true;
-            console.log('Found final')
-        } else {
-            approved.push(nodeLocation)
-        }
-    });
-    return approved;
-};
-
-
-// check array of unvisited nodes
-//  return true if node been discovered already
-function nodeBeenDiscovered(nodeId) {
-    let allFound = availableNodes.filter(function (node) {
-        if (node.type != 'unvisited') {
-            return true
-        };
-    })
-    if (allFound.length == 0) {
-        return true
-    } else {
-        return false
-    }
-}
-
-
 // start algorith by submit btn
 // need to move functions that access previous global variables inside function because functions couldn't access global variables
 function startAlgorithm() {
@@ -250,6 +186,7 @@ function startAlgorithm() {
             newNode.setDistance(0)
             availableNodes.push(newNode)
         }
+
 
         // make list of all unvisited nodes
         // where going to check for valid nodes
@@ -291,6 +228,51 @@ function startAlgorithm() {
                     GetVisitedNodes()
                 }
             }
+        };
+
+
+        // checking if node is final node
+        // need for recursive function check
+        function checkNodesType(nodeList) {
+            let approved = [];
+            nodeList.forEach((nodeLocation) => {
+                if (nodeLocation[0] == endCoordinates[0] && nodeLocation[1] == endCoordinates[1]) {
+                    foundEnd = true;
+                    console.log('Found final')
+                } else {
+                    approved.push(nodeLocation)
+                }
+            });
+            return approved;
+        };
+
+
+        // result of list of all valid nodes
+        // check if nodes location are not out of bounds
+        // input is [y, x] location with int values
+        function newNodes(nodeLocation) {
+            let newCoordinates = [];
+            newCoordinates.push([nodeLocation[0], nodeLocation[1] + 1]);
+            newCoordinates.push([nodeLocation[0], nodeLocation[1] - 1]);
+            newCoordinates.push([nodeLocation[0] + 1, nodeLocation[1]]);
+            newCoordinates.push([nodeLocation[0] - 1, nodeLocation[1]]);
+            newCoordinates = checkByCoordinates(newCoordinates);
+            return checkNodesType(newCoordinates);
+        };
+
+
+        // check if coordinates for future nodes are valid/are not out of bounds
+        // in and out list of nodes
+        // also check if nodes been visited 
+        function checkByCoordinates(nodeList) {
+            let approved = [];
+            nodeList.forEach((nodeLocation) => {
+                if (nodeLocation[0] >= 0 && nodeLocation[0] < height && nodeLocation[1] >= 0 && nodeLocation[1] < width) {
+                    let NodeId = nodeLocation[0] + '-' + nodeLocation[1]
+                    approved.push(nodeLocation);
+                }
+            });
+            return approved;
         };
 
 
@@ -339,6 +321,22 @@ function startAlgorithm() {
             });
             return nodeObjects
         };
+
+
+        // check array of unvisited nodes
+        //  return true if node been discovered already
+        function nodeBeenDiscovered(nodeId) {
+            let allFound = availableNodes.filter(function (node) {
+                if (node.type != 'unvisited') {
+                    return true
+                };
+            })
+            if (allFound.length == 0) {
+                return true
+            } else {
+                return false
+            }
+        }
 
 
         // make solution
@@ -406,15 +404,9 @@ function startAlgorithm() {
                 visitedNodes.add(wallNode.id)
             });
         };
-
-
-
     });
 };
 startAlgorithm()
-
-
-
 
 
 // get nodeId of smallest min distance from object list
