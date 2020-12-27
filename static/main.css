@@ -125,7 +125,12 @@ li{
         background: yellow;
 
     }
-    }
+}
+
+.description{
+    display: flex;
+    justify-content: center;
+}
 
 
 /* control buttons divs */

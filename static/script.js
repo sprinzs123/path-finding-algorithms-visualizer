@@ -371,7 +371,7 @@ function startAlgorithm() {
                 if (i === visitedNodesOrder.length) {
                     setTimeout(() => {
                         animateShortestPath();
-                    }, 10 * i);
+                    }, 15 * i);
                     return;
                 }
                 setTimeout(() => {
