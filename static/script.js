@@ -63,6 +63,14 @@ function wallGenerator() {
                 }
             });
         });
+        allUnvisited.forEach((point) => {
+            point.addEventListener("click", function () {
+                if (canDrag == true) {
+                    point.classList = "wall-node";
+                }
+            });
+        });
+
     }
 }
 wallGenerator();
@@ -442,21 +450,6 @@ function resetNodes() {
 }
 
 
-// resets value of in array for solution
-// run at the end of algorithm
-// rerunning functions that are responsible for maze generation
-function resetValues() {
-    nodesList.length = 0
-    availableNodes.length = 0
-    visitedNodes.clear()
-    visitedNodesOrder.length = 0
-    solution = []
-    makeNodes();
-    makeStartNodes('start-node')
-
-}
-
-
 // reset wall nodes to blank nodes 
 function resetWalls() {
     let clearBtn = document.querySelector('.clear-board')
@@ -489,6 +482,7 @@ function makeDemo() {
     let demoBtn = document.querySelector('.make-demo')
     demoBtn.addEventListener('click', () => {
         resetWalls()
+        resetNodes()
         makeNodes();
         let newWalls = ["1-22", "2-22", "3-19", "3-22", "4-19", "4-22", "5-19", "5-22", "6-14", "6-15", "6-16", "6-17", "6-18", "6-19", "6-20", "6-21", "6-22",
             "6-23", "6-24", "6-25", "6-26", "6-27", "6-28", "6-29", "7-19", "7-24", "8-19", "8-24", "8-29", "9-19", "9-24", "9-29", "10-19", "10-24", "10-29", "11-19", "11-23", "11-24",
