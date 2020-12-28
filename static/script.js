@@ -63,18 +63,22 @@ function wallGenerator() {
                 }
             });
         });
-        allUnvisited.forEach((point) => {
-            point.addEventListener("click", function () {
-                if (canDrag == true) {
-                    point.classList = "wall-node";
-                }
-            });
-        });
-
     }
 }
 wallGenerator();
 
+
+function clickWallGenerator(){
+    let allUnvisited = document.querySelectorAll(".unvisited");
+    if (isRunning == false) {
+        allUnvisited.forEach((point) => {
+            point.addEventListener("click", function () {
+                    point.classList = "wall-node";
+            });
+        });
+    }
+}
+clickWallGenerator()
 
 let canDrag = false;
 let endCoordinates = null
