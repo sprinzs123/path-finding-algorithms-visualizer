@@ -140,3 +140,36 @@ li{
     margin-bottom: 1em;
 }
 
+
+@media(max-width: 857px){
+    th, .node{
+        width: 0.8em;
+        height: 0.8em;
+        border: 1px solid lightblue;
+    }
+}
+
+
+@media(max-width: 700px){
+    th, .node{
+        width: 0.6em;
+        height: 0.6em;
+        border: 1px solid lightblue;
+    }
+}
+
+@media(max-width: 700px){
+    th{
+        width: 0.45em;
+        height: 0.45em;
+        border: 1px solid lightblue;
+    }
+}
+
+@media(max-width: 400px){
+    th{
+        width: 0.3em;
+        height: 0.3em;
+        border: 1px solid lightblue;
+    }
+}
